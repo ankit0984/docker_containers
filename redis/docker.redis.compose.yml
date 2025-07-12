@@ -1,0 +1,13 @@
+version: "3.0.1"
+
+services:
+  redis:
+    container_name: redis
+    image: "docker.io/bitnami/redis:latest"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    restart: always
+    ports:
+      - "6379:6379"
