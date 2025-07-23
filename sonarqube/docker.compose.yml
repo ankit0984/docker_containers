@@ -1,0 +1,38 @@
+services:
+  postgresql:
+    image: docker.io/bitnami/postgresql:latest
+    volumes:
+      - ./docker/postgresql_data:/bitnami/postgresql
+    restart: unless-stopped
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=no
+      - POSTGRESQL_USERNAME=bn_sonarqube
+      - POSTGRESQL_DATABASE=bitnami_sonarqube
+      - POSTGRESQL_PASSWORD=bitnami
+  sonarqube:
+    image: docker.io/bitnami/sonarqube:25
+    ports:
+      - '80:9000'
+    volumes:
+      - ./docker/sonarqube_data:/bitnami/sonarqube
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=no
+      - SONARQUBE_USERNAME=admin
+      - SONARQUBE_PASSWORD=bitnami@2023
+      - SONARQUBE_DATABASE_HOST=postgresql
+      - SONARQUBE_DATABASE_PORT_NUMBER=5432
+      - SONARQUBE_DATABASE_PASSWORD=bitnami
+      - SONARQUBE_DATABASE_USER=bn_sonarqube
+      - SONARQUBE_DATABASE_NAME=bitnami_sonarqube
+      - SONARQUBE_ELASTICSEARCH_PORT_NUMBER=9001
+
+volumes:
+  postgresql_data:
+    driver: local
+  sonarqube_data:
+    driver: local
